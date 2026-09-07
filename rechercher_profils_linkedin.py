@@ -1,13 +1,23 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import sys
 import time
 import random
-import signal
 import threading
 import unicodedata
+import multiprocessing as mp
 from urllib.parse import urlparse
 import pandas as pd
+
+# Sortie non bufferisée : sans ça, les print() peuvent rester invisibles dans les
+# logs GitHub Actions pendant un long moment (la sortie n'est pas un terminal),
+# donnant l'impression à tort que le script est bloqué alors qu'il avance.
+try:
+    sys.stdout.reconfigure(line_buffering=True)
+    sys.stderr.reconfigure(line_buffering=True)
+except Exception:
+    pass
 
 # Import natif basé sur votre exemple de script
 try:
@@ -21,31 +31,62 @@ class RechercheDDGSExpiree(Exception):
     GitHub Actions, ne renvoyer aucune réponse ni erreur et bloquer indéfiniment."""
     pass
 
-def _lever_timeout(signum, frame):
-    raise RechercheDDGSExpiree("Délai dépassé en attendant la réponse de DuckDuckGo.")
+def _worker_ddgs(query, kwargs, resultat_queue):
+    """Exécuté dans un processus séparé (voir ddgs_text_avec_timeout)."""
+    try:
+        with DDGS() as ddgs:
+            resultats = list(ddgs.text(query, **kwargs))
+        resultat_queue.put(("ok", resultats))
+    except Exception as e:
+        resultat_queue.put(("erreur", str(e)))
 
 def ddgs_text_avec_timeout(query, timeout=20, **kwargs):
     """
-    Exécute une recherche DDGS avec une limite de temps stricte, pour éviter un
-    blocage indéfini du script si DuckDuckGo ne répond plus (fréquent sur les IPs
-    partagées de GitHub Actions). Renvoie la liste des résultats, ou lève
-    RechercheDDGSExpiree / toute autre exception réseau au bout de `timeout`
-    secondes, ce que la logique de retry existante peut alors gérer normalement.
+    Exécute une recherche DDGS dans un PROCESSUS séparé, avec une limite de temps
+    stricte. Si le processus ne répond pas à temps, il est tué de force
+    (Process.terminate) — contrairement à un simple timeout par signal, ceci
+    fonctionne même si l'appel réseau est bloqué dans du code natif (le client
+    HTTP de la librairie ddgs est écrit en Rust) qui ignore les signaux Python.
+
+    Par défaut, restreint les moteurs interrogés à une liste fiable/joignable
+    depuis les runners GitHub Actions : le mode "auto" de ddgs essaie Wikipedia et
+    Grokipedia en premier (hors-sujet ici, et Grokipedia est injoignable en
+    pratique : "Network is unreachable"), puis Google, lui aussi injoignable
+    depuis ces IPs. On évite ce gaspillage de temps en ciblant directement les
+    moteurs qui répondent réellement.
     """
-    ancien_handler = signal.signal(signal.SIGALRM, _lever_timeout)
-    signal.alarm(timeout)
-    try:
-        with DDGS() as ddgs:
-            return list(ddgs.text(query, **kwargs))
-    finally:
-        signal.alarm(0)
-        signal.signal(signal.SIGALRM, ancien_handler)
+    kwargs.setdefault("backend", "duckduckgo,bing,brave,mojeek,startpage,yahoo")
+    resultat_queue = mp.Queue()
+    processus = mp.Process(target=_worker_ddgs, args=(query, kwargs, resultat_queue))
+    processus.daemon = True
+    processus.start()
+    processus.join(timeout)
+
+    if processus.is_alive():
+        processus.terminate()
+        processus.join(5)
+        if processus.is_alive():
+            processus.kill()
+            processus.join()
+        raise RechercheDDGSExpiree(
+            f"Délai de {timeout}s dépassé en attendant la réponse de DuckDuckGo "
+            f"(processus de recherche arrêté de force)."
+        )
+
+    if resultat_queue.empty():
+        raise RechercheDDGSExpiree("Le processus de recherche s'est arrêté sans renvoyer de résultat.")
+
+    statut, valeur = resultat_queue.get()
+    if statut == "erreur":
+        raise Exception(valeur)
+    return valeur
 
 # ==========================================
 # CONFIGURATION
 # ==========================================
 FICHIER_ENTREE = "liste_urls.csv"
 FICHIER_SORTIE = "profils_linkedin_trouves.csv"
+FICHIER_DEBUG_ECARTES = "profils_ecartes_debug.csv"
 
 POSTES_CIBLES = [
     "Directeur d'établissement",
@@ -356,39 +397,48 @@ def verifier_emploi_actuel(nom_entreprise, entreprise_reelle, body, periode=""):
     ce n'est PAS une vérification en temps réel du profil LinkedIn (nécessiterait
     une connexion authentifiée), mais une estimation à partir de ce qui est indexé.
 
-    IMPORTANT (mode strict) : seule une confirmation par le TITRE du profil compte comme
-    preuve valable. La simple mention du nom de l'entreprise dans la description du
-    résultat n'est PAS utilisée comme preuve : la requête de recherche contient déjà le
-    nom de l'entreprise recherchée, donc DuckDuckGo renvoie presque toujours des extraits
-    qui le mentionnent quelque part, même quand la personne travaille ailleurs. Ce critère
-    ne discriminait donc presque rien et laissait passer beaucoup de faux positifs.
+    Preuve PRINCIPALE : le TITRE du profil confirme l'entreprise (3e segment
+    "Nom - Poste - Entreprise"). C'est la preuve la plus fiable.
+
+    Preuve SECONDAIRE (si le titre n'a pas ce 3e segment, ex: LinkedIn/DuckDuckGo
+    indexe parfois juste "Nom - Poste" sans la société) : on accepte quand même SI
+    ET SEULEMENT SI les DEUX conditions suivantes sont réunies dans l'extrait
+    (body) : l'entreprise y est mentionnée ET une période explicitement en cours
+    ("aujourd'hui"/"present") y est détectée. Exiger les deux à la fois évite de
+    retomber sur le problème initial (la requête contenant déjà le nom de
+    l'entreprise, une simple mention seule ne prouve rien).
 
     Retourne (bool_emploi_actuel, raison_texte).
     """
+    periode_norm = normaliser(periode) if periode else ""
     texte_combine_norm = normaliser(f"{entreprise_reelle} {body}")
 
-    # 1. Le titre doit confirmer l'entreprise recherchée : c'est la SEULE preuve valable.
-    if not entreprise_reelle or not entreprise_correspond(nom_entreprise, entreprise_reelle):
+    titre_confirme = bool(entreprise_reelle) and entreprise_correspond(nom_entreprise, entreprise_reelle)
+
+    if not titre_confirme:
+        # Preuve secondaire : entreprise ET période en cours toutes deux détectées
+        # dans l'extrait, en l'absence du 3e segment habituel dans le titre.
+        periode_en_cours = bool(periode_norm) and any(mot in periode_norm for mot in ["aujourd", "present"])
+        if periode_en_cours and entreprise_dans_body(body, nom_entreprise):
+            if any(mot in texte_combine_norm for mot in INDICES_ANCIEN_POSTE):
+                return False, "Non - indice d'ancien poste detecte (preuve secondaire)"
+            return True, f"Oui (preuve secondaire) - entreprise mentionnee + periode en cours dans l'extrait : {periode}"
         if entreprise_reelle:
             return False, f"Non - entreprise differente indiquee dans le titre : {entreprise_reelle}"
-        return False, "Non confirme - entreprise non indiquee dans le titre du profil"
+        return False, "Non confirme - entreprise non indiquee dans le titre du profil (et pas de preuve secondaire suffisante)"
 
     # 2. Période détectée avec une date de fin explicite (pas "aujourd'hui"/"present")
     #    = signal fort que le poste est terminé.
-    if periode:
-        periode_norm = normaliser(periode)
-        if not any(mot in periode_norm for mot in ["aujourd", "present"]):
-            return False, f"Non - periode terminee detectee : {periode}"
+    if periode_norm and not any(mot in periode_norm for mot in ["aujourd", "present"]):
+        return False, f"Non - periode terminee detectee : {periode}"
 
     # 3. Indices textuels d'ancien poste
     if any(mot in texte_combine_norm for mot in INDICES_ANCIEN_POSTE):
         return False, "Non - indice d'ancien poste detecte"
 
     # 4. Entreprise confirmée par le titre, éventuellement renforcée par une période en cours
-    if periode:
-        periode_norm = normaliser(periode)
-        if any(mot in periode_norm for mot in ["aujourd", "present"]):
-            return True, f"Oui - entreprise et periode en cours confirmees dans le titre : {periode}"
+    if periode_norm and any(mot in periode_norm for mot in ["aujourd", "present"]):
+        return True, f"Oui - entreprise et periode en cours confirmees dans le titre : {periode}"
 
     return True, "Oui - entreprise confirmee dans le titre du profil"
 
@@ -528,12 +578,12 @@ def obtenir_infos_entreprise(nom_entreprise, url_linkedin="", site_existant="", 
     echecs = []
 
     if not site_web:
-        time.sleep(random.uniform(2.0, 4.0))
+        time.sleep(random.uniform(3.0, 6.0))
         site_web, echec_site = rechercher_site_web(nom_entreprise, url_linkedin)
         echecs.append(echec_site)
 
     if not adresse or not telephone:
-        time.sleep(random.uniform(2.0, 4.0))
+        time.sleep(random.uniform(3.0, 6.0))
         adresse_trouvee, telephone_trouve, echec_contact = rechercher_adresse_telephone(nom_entreprise)
         if not adresse:
             adresse = adresse_trouvee
@@ -607,7 +657,7 @@ def search_duckduckgo_direct(nom_entreprise, poste, max_results=5, max_retries=3
 def main():
     if not os.path.exists(FICHIER_ENTREE):
         print(f"❌ Erreur : Le fichier d'entrée '{FICHIER_ENTREE}' est introuvable.")
-        return
+        sys.exit(1)
 
     # 1. Chargement et normalisation des données sources
     df_entree, enc_entree, sep_entree = read_table_with_format(FICHIER_ENTREE)
@@ -695,24 +745,22 @@ def main():
 
         print(f"[{index}/{len(urls_du_lot)}] Recherche directe pour : {nom_entreprise}...")
 
-        # Site web / adresse / téléphone : réutilise ce qui est déjà dans le fichier
-        # d'entrée, complète uniquement ce qui manque par une recherche.
-        site_web, adresse, telephone = obtenir_infos_entreprise(
-            nom_entreprise,
-            url_clean,
-            infos_connues.get("site", ""),
-            infos_connues.get("adresse", ""),
-            infos_connues.get("telephone", ""),
-        )
+        # Site web / adresse / téléphone : recherche désactivée pour accélérer le
+        # traitement. On garde uniquement ce qui est déjà présent dans le fichier
+        # d'entrée (aucun appel réseau supplémentaire ici).
+        site_web = infos_connues.get("site", "")
+        adresse = infos_connues.get("adresse", "")
+        telephone = infos_connues.get("telephone", "")
 
         profils_trouves = []
         profils_ecartes = 0
+        candidats_ecartes_debug = []
         urls_uniques_profils = set()
 
         # Itération sur chaque poste
         for poste in POSTES_CIBLES:
             # Temporisation pour ne pas surcharger DuckDuckGo (comme dans votre exemple)
-            time.sleep(random.uniform(2.0, 4.0))
+            time.sleep(random.uniform(3.0, 6.0))
 
             resultats_recherche = search_duckduckgo_direct(nom_entreprise, poste)
 
@@ -737,12 +785,33 @@ def main():
                 # ENCORE aujourd'hui dans l'entreprise recherchée.
                 if not emploi_actuel:
                     profils_ecartes += 1
+                    candidats_ecartes_debug.append({
+                        "URL Entreprise": url_clean,
+                        "Nom Entreprise": nom_entreprise,
+                        "Poste Recherche": poste,
+                        "Nom Profil": nom_prenom,
+                        "Titre Complet": titre_complet,
+                        "Entreprise Extraite du Titre": entreprise_reelle,
+                        "Periode Detectee": periode,
+                        "Lien LinkedIn": profil_url,
+                        "Raison Rejet": raison,
+                    })
                     continue
 
                 profils_trouves.append(
                     (nom_prenom, profil_url, poste, intitule_reel, titre_complet,
                      entreprise_reelle, periode, niveau_poste, domaine_equipements, raison)
                 )
+
+        # Journal de diagnostic : permet de comprendre exactement pourquoi un profil
+        # connu (dont on sait qu'il travaille bien dans l'entreprise) a été écarté,
+        # au lieu de se fier uniquement au compteur "profils écartés".
+        if candidats_ecartes_debug:
+            df_debug = pd.DataFrame(candidats_ecartes_debug)
+            with WRITE_LOCK:
+                entete_debug = not os.path.exists(FICHIER_DEBUG_ECARTES)
+                df_debug.to_csv(FICHIER_DEBUG_ECARTES, mode="a", header=entete_debug,
+                                 index=False, sep=";", encoding="utf-8-sig")
 
         # 4. Préparation de la ligne finale
         row_data = {
@@ -794,10 +863,9 @@ def main():
     print(f"\n🎉 Script terminé pour ce lot. Fichier mis à jour : '{FICHIER_SORTIE}'")
     print(f"📊 Il reste {restant_apres_lot} URL(s) à traiter.")
 
-    # Écrit un indicateur simple pour que le workflow GitHub Actions sache
-    # s'il doit se relancer automatiquement.
-    with open("reste_a_traiter.txt", "w", encoding="utf-8") as f:
-        f.write(str(restant_apres_lot))
+    # Code de sortie utilisé par le workflow GitHub Actions pour savoir s'il doit
+    # relancer un lot suivant : 2 = il reste des URLs, 0 = tout est traité.
+    sys.exit(2 if restant_apres_lot > 0 else 0)
 
 if __name__ == "__main__":
     main()
