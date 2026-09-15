@@ -299,3 +299,103 @@ f.faty@tropichotel.com,tropichotel.com,,,Impossible (résolution MX échouée),I
 f.favara@appartcity.com,appartcity.com,appartcity-com.mail.protection.outlook.com,Oui,Catch-all détecté (résultat non fiable),Catch-all (non fiable)
 f.fiche@sandaya.fr,sandaya.fr,aspmx.l.google.com,Oui,Catch-all détecté (résultat non fiable),Catch-all (non fiable)
 f.gaucher@hotel-bordeaux-sud.com,hotel-bordeaux-sud.com,,,Impossible (résolution MX échouée),Impossible (MX)
+f.gharbi@louvre-hotels.com,louvre-hotels.com,louvrehotels-com01e.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.glineur@westminster-nice.com,westminster-nice.com,vade-mx-fr02.hornetsecurity.com,Non,Incertain (Code 554 : 5.5.4 Your IP address 172.174.221.233 has a bad reputation. To unblock visit https://cloud-security.net/unblock?blocked_ip=172.174.221.233&reason=6&qid=NOQUEUE),Incertain
+f.gonnet@thalgo.com,thalgo.com,thalgo-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.guede@ecoleterrade.com,ecoleterrade.com,ecoleterrade-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.guerin@hotel-delaplage.fr,hotel-delaplage.fr,hoteldelaplage-fr01c.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.herledan@guest-strategy.com,guest-strategy.com,,,Impossible (résolution MX échouée),Impossible (MX)
+f.hevin@louvre-hotels.com,louvre-hotels.com,louvrehotels-com01e.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.huet@louvre-hotels.com,louvre-hotels.com,louvrehotels-com01e.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.humeau@brithotel.fr,brithotel.fr,mx1.cyberbrain.net,Non,Incertain (Code 450 : 4.7.1 <f.humeau@brithotel.fr>: Recipient address rejected: Service is unavailable (try later)),Incertain
+f.isserte@piscinesdefrance.fr,piscinesdefrance.fr,piscinesdefrance-fr.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.jalade@hotel-orangerie.fr,hotel-orangerie.fr,mta-gw.infomaniak.ch,Non,Inexistant (SMTP 550),Inexistant
+f.jestin@accelis.com,accelis.com,,,Impossible (résolution MX échouée),Impossible (MX)
+f.josenhans@grape-hospitality.com,grape-hospitality.com,grapehospitality-com01c.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.lagneau@louvre-hotels.com,louvre-hotels.com,louvrehotels-com01e.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.lallemand@vert-marine.com,vert-marine.com,vertmarine-com01b.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.landrieve@centrotel.fr,centrotel.fr,mx4.mail.ovh.net,Non,"Incertain (Code 450 : 4.7.1 Client host rejected: cannot find your reverse hostname, [172.174.221.233])",Incertain
+f.laran@beaumier.com,beaumier.com,beaumier-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.lauroa@piscinesdefrance.fr,piscinesdefrance.fr,piscinesdefrance-fr.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.lebreuilly@appartcity.com,appartcity.com,appartcity-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.lefour@appartcity.com,appartcity.com,appartcity-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.lelievre@nemea.fr,nemea.fr,nemea-fr.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.malves@lavillaguy.com,lavillaguy.com,lavillaguy-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.nayral@cryotera.fr,cryotera.fr,mx0.mail.ovh.net,Non,"Incertain (Code 450 : 4.7.1 Client host rejected: cannot find your reverse hostname, [172.174.221.233])",Incertain
+f.paillas@yoburo.com,yoburo.com,aspmx.l.google.com,Non,Inexistant (SMTP 550),Inexistant
+f.paul@villalacoste.com,villalacoste.com,villalacoste-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.pean@camping-beauregard.com,camping-beauregard.com,lb.filnet.fr,Non,Timeout (le port 25 est probablement bloqué par votre réseau/hébergeur),Erreur (voir Resultat_SMTP)
+f.peral@igesa.fr,igesa.fr,igesa-fr.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.poirier@espritdefrance.com,espritdefrance.com,espritdefrance-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.pottier@passagebleu.com,passagebleu.com,mail.cobweb.fr,Non,Incertain (Code 450 : 4.7.1 <verification-bot.com>: Helo command rejected: Host not found),Incertain
+f.redcent@grandesetapes.fr,grandesetapes.fr,mx01.ionos.fr,Non,Le serveur a coupé la connexion (blocage anti-spam probable côté entreprise),Erreur (voir Resultat_SMTP)
+f.renard@sources-caudalie.com,sources-caudalie.com,sourcescaudalie-com01i.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.sall@louvre-hotels.com,louvre-hotels.com,louvrehotels-com01e.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.senez@umih.fr,umih.fr,umih-fr.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.simonnet@grape-hospitality.com,grape-hospitality.com,grapehospitality-com01c.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.soler@grape-hospitality.com,grape-hospitality.com,grapehospitality-com01c.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.talluault@zenitude-groupe.com,zenitude-groupe.com,protect.oci.fr,Non,Le serveur a coupé la connexion (blocage anti-spam probable côté entreprise),Erreur (voir Resultat_SMTP)
+f.teyssonnieres@appartcity.com,appartcity.com,appartcity-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.thomas@louvre-hotels.com,louvre-hotels.com,louvrehotels-com01e.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+f.trombetta@brithotel.fr,brithotel.fr,mx1.cyberbrain.net,Non,Incertain (Code 450 : 4.7.1 <f.trombetta@brithotel.fr>: Recipient address rejected: Service is unavailable (try later)),Incertain
+f.varnet@domainedesuzel.com,domainedesuzel.com,vade-mx-fr01.hornetsecurity.com,Non,Incertain (Code 554 : 5.5.4 Your IP address 172.174.221.233 has a bad reputation. To unblock visit https://cloud-security.net/unblock?blocked_ip=172.174.221.233&reason=6&qid=NOQUEUE),Incertain
+f.vassard@escalemarine.com,escalemarine.com,mail.escalemarine.com,Non,Le serveur a coupé la connexion (blocage anti-spam probable côté entreprise),Erreur (voir Resultat_SMTP)
+f.westrelin@louvre-hotels.com,louvre-hotels.com,louvrehotels-com01e.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabdi@ponant.com,ponant.com,mxa-0094fe01.gslb.pphosted.com,Non,Expéditeur rejeté par le serveur (code 550 : 5.7.1 Command rejected) - vérification impossible,Erreur (voir Resultat_SMTP)
+fabian.pauchot@accor.com,accor.com,accor.in.tmes.trendmicro.eu,Non,Valide (SMTP 250),Valide
+fabien.bernard@leslodgessaintevictoire.com,leslodgessaintevictoire.com,mx1.api-and-you.com,Oui,Catch-all détecté (résultat non fiable),Catch-all (non fiable)
+fabien.brisedoux@richerdebelleval.com,richerdebelleval.com,,,Impossible (résolution MX échouée),Impossible (MX)
+fabien.charton@mileade.com,mileade.com,mileade-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabien.delannoy@hotel-carlina.com,hotel-carlina.com,hotelcarlina-com01c.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabien.fouqueray@disney.com,disney.com,disney-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabien.gentou@radissonblu.com,radissonblu.com,radissonhotels.in.tmes.trendmicro.eu,Oui,Catch-all détecté (résultat non fiable),Catch-all (non fiable)
+fabien.germain@marvilla-parks.com,marvilla-parks.com,alt1.aspmx.l.google.com,Non,Inexistant (SMTP 550),Inexistant
+fabien.lemaire@thallacap.com,thallacap.com,,,Impossible (résolution MX échouée),Impossible (MX)
+fabien.molinier@grand-albigeois.fr,grand-albigeois.fr,mta01.ic2a.net,Non,"Incertain (Code 450 : 4.7.25 Client host rejected: cannot find your hostname, [172.174.221.233])",Incertain
+fabien.moutte@hotelsaintlouis.com,hotelsaintlouis.com,d279313a.ess.barracudanetworks.com,Oui,Catch-all détecté (résultat non fiable),Catch-all (non fiable)
+fabien.yede@accor.com,accor.com,accor.in.tmes.trendmicro.eu,Non,Incertain (Code 554 : 5.7.1 <fabien.yede@accor.com>: Recipient address rejected: Invalid-Recipient.),Incertain
+fabien@morcel-fondateur.fr,morcel-fondateur.fr,,,Impossible (résolution MX échouée),Impossible (MX)
+fabienne.andrivon@bestwestern.fr,bestwestern.fr,bestwestern-mx1.titanhq.com,Non,Inexistant (SMTP 550),Inexistant
+fabienne.bini@vichycelestins.com,vichycelestins.com,mail.debussac.fr,Non,Erreur réseau : [Errno -2] Name or service not known,Erreur (voir Resultat_SMTP)
+fabienne.chauveau@theascott.com,theascott.com,,,Impossible (résolution MX échouée),Impossible (MX)
+fabienne.dalaine@yrnet.com,yrnet.com,mxa-0021d901.gslb.pphosted.com,Non,Expéditeur rejeté par le serveur (code 550 : 5.7.1 Command rejected) - vérification impossible,Erreur (voir Resultat_SMTP)
+fabienne.met@deepnature.fr,deepnature.fr,mx0.mail.ovh.net,Non,"Incertain (Code 450 : 4.7.1 Client host rejected: cannot find your reverse hostname, [172.174.221.233])",Incertain
+fabienne@remy-direction.fr,remy-direction.fr,,,Impossible (résolution MX échouée),Impossible (MX)
+fabio.negro@accor.com,accor.com,accor.in.tmes.trendmicro.eu,Non,Valide (SMTP 250),Valide
+fabio.vetro@caliceo.com,caliceo.com,caliceo-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabiola.finelli@hotel-sparibeauville.com,hotel-sparibeauville.com,,,Impossible (résolution MX échouée),Impossible (MX)
+fabiola.vaugon@phytomer.com,phytomer.com,phytomer-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabrice.augey@langoustier.com,langoustier.com,mail.langoustier.com,Non,Inexistant (SMTP 550),Inexistant
+fabrice.belloir@fougeres.fr,fougeres.fr,vade-mx-fr01.hornetsecurity.com,Non,Incertain (Code 554 : 5.5.4 Your IP address 172.174.221.233 has a bad reputation. To unblock visit https://cloud-security.net/unblock?blocked_ip=172.174.221.233&reason=6&qid=NOQUEUE),Incertain
+fabrice.durand@bl-hotels.com,bl-hotels.com,vade-mx-fr01.hornetsecurity.com,Non,Incertain (Code 554 : 5.5.4 Your IP address 172.174.221.233 has a bad reputation. To unblock visit https://cloud-security.net/unblock?blocked_ip=172.174.221.233&reason=6&qid=NOQUEUE),Incertain
+fabrice.karolewicz@accor.com,accor.com,accor.in.tmes.trendmicro.eu,Non,Valide (SMTP 250),Valide
+fabrice.lacour@radissonhotels.com,radissonhotels.com,radissonhotels.in.tmes.trendmicro.eu,Oui,Catch-all détecté (résultat non fiable),Catch-all (non fiable)
+fabrice.marchand@champselyseesplaza.com,champselyseesplaza.com,champselyseesplaza-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabrice.noguera@fairmont.com,fairmont.com,accor.in.tmes.trendmicro.eu,Non,Incertain (Code 554 : 5.7.1 <fabrice.noguera@fairmont.com>: Recipient address rejected: Invalid-Recipient.),Incertain
+fabrice.paul@accor.com,accor.com,accor.in.tmes.trendmicro.eu,Non,Valide (SMTP 250),Valide
+fabrice.picou@disney.com,disney.com,disney-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabrice.pinault@radissonhotels.com,radissonhotels.com,radissonhotels.in.tmes.trendmicro.eu,Oui,Catch-all détecté (résultat non fiable),Catch-all (non fiable)
+fabrice.pipard@odalys.fr,odalys.fr,odalys-fr.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabrice.provin@relaisdubienetre.fr,relaisdubienetre.fr,,,Impossible (résolution MX échouée),Impossible (MX)
+fabrice.schuch@7hotel-spa.com,7hotel-spa.com,,,Impossible (résolution MX échouée),Impossible (MX)
+fabrice.tareau@thermesdevals.com,thermesdevals.com,mx02.cloud.vadesecure.com,Non,Le serveur a coupé la connexion (blocage anti-spam probable côté entreprise),Erreur (voir Resultat_SMTP)
+fabrice.vivier@irrijardin.fr,irrijardin.fr,irrijardin-fr.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fabrice@infraslimx.fr,infraslimx.fr,mx4.mail.ovh.net,Non,"Incertain (Code 450 : 4.7.1 Client host rejected: cannot find your reverse hostname, [172.174.221.233])",Incertain
+facira.raad@lareserve-paris.com,lareserve-paris.com,mxa-008f2201.gslb.pphosted.com,Non,Expéditeur rejeté par le serveur (code 550 : 5.7.1 Command rejected) - vérification impossible,Erreur (voir Resultat_SMTP)
+fadhel.benghanem@accor.com,accor.com,accor.in.tmes.trendmicro.eu,Non,Valide (SMTP 250),Valide
+faiza.krouifi@sofitel.com,sofitel.com,accor.in.tmes.trendmicro.eu,Non,Incertain (Code 554 : 5.7.1 <faiza.krouifi@sofitel.com>: Recipient address rejected: Invalid-Recipient.),Incertain
+fanelie.gaffinel@accor.com,accor.com,accor.in.tmes.trendmicro.eu,Non,Valide (SMTP 250),Valide
+fanie.cangas@feracheval-megeve.com,feracheval-megeve.com,mx-mibc-fr-03.mailinblack.com,Non,Inexistant (SMTP 550),Inexistant
+fanny.bertho@directricegenerale.fr,directricegenerale.fr,,,Impossible (résolution MX échouée),Impossible (MX)
+fanny.cavalier@vallondevalrugues.com,vallondevalrugues.com,digithall.mailinblack.com,Non,Inexistant (SMTP 550),Inexistant
+fanny.coupin@ecole-terrade.com,ecole-terrade.com,mx4.mail.ovh.net,Non,"Incertain (Code 450 : 4.7.1 Client host rejected: cannot find your reverse hostname, [172.174.221.233])",Incertain
+fanny.echalier@experimentalgroup.com,experimentalgroup.com,mail2.namebrightmail.com,Non,Expéditeur rejeté par le serveur (code 501 : 5.5.4 Invalid Address.) - vérification impossible,Erreur (voir Resultat_SMTP)
+fanny.froment@spaoasisnatura.fr,spaoasisnatura.fr,spaoasisnatura.fr,Non,Le serveur a coupé la connexion (blocage anti-spam probable côté entreprise),Erreur (voir Resultat_SMTP)
+fanny.garret@roncemay.com,roncemay.com,roncemay-com.mail.protection.outlook.com,Non,Inexistant (SMTP 550),Inexistant
+fanny.guibouret@fourseasons.com,fourseasons.com,mx1.fourseasons.iphmx.com,Non,Le serveur a coupé la connexion (blocage anti-spam probable côté entreprise),Erreur (voir Resultat_SMTP)
+fanny.heckler@athena-spa.com,athena-spa.com,,,Impossible (résolution MX échouée),Impossible (MX)
+fanny.jorge@lespritdessens.fr,lespritdessens.fr,,,Impossible (résolution MX échouée),Impossible (MX)
+fanny.louis@manoir-poterie.fr,manoir-poterie.fr,,,Impossible (résolution MX échouée),Impossible (MX)
+fanny.mercier@dorchestercollection.com,dorchestercollection.com,eu-smtp-inbound-1.mimecast.com,Non,Inexistant (SMTP 550),Inexistant
+fanny.morenne@emeria.com,emeria.com,,,Impossible (résolution MX échouée),Impossible (MX)
+fanny.parinaud@wyndhamhotels.com,wyndhamhotels.com,,,Impossible (résolution MX échouée),Impossible (MX)
