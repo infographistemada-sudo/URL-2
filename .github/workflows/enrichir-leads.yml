@@ -32,7 +32,7 @@ jobs:
           # Le script sort avec le code 2 s'il reste des leads à traiter, 0 si
           # tout est terminé. On capture ce code sans faire échouer le job.
           set +e
-          python Verifier_emails_smtp.py
+          python enrichissement_leads.py
           echo "code_sortie=$?" >> "$GITHUB_OUTPUT"
           set -e
 
