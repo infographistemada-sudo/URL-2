@@ -1,0 +1,69 @@
+name: Enrichissement des leads
+
+# Se lance manuellement depuis l'onglet "Actions" du repo (bouton "Run workflow").
+on:
+  workflow_dispatch:
+
+jobs:
+  enrichir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90        # un lot de 15 leads (scraping + SMTP) prend du temps par lead
+    permissions:
+      contents: write          # nécessaire pour re-commit liste.csv / leads_enrichis.csv
+      actions: write           # nécessaire pour déclencher le prochain lot (workflow_dispatch)
+
+    steps:
+      - name: Checkout du dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installer les dépendances
+        run: pip install requests dnspython
+
+      - name: Lancer l'enrichissement (lot de 15 leads max)
+        id: enrichissement
+        env:
+          MAX_LEADS_PAR_RUN: "15"
+        run: |
+          # Le script sort avec le code 2 s'il reste des leads à traiter, 0 si
+          # tout est terminé. On capture ce code sans faire échouer le job.
+          set +e
+          python Verifier_emails_smtp.py
+          echo "code_sortie=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Uploader le CSV enrichi comme artefact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: leads_enrichis-${{ github.run_number }}
+          path: leads_enrichis.csv
+
+      - name: Committer et pousser les fichiers mis à jour
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add liste.csv leads_enrichis.csv
+          git diff --staged --quiet || git commit -m "Enrichissement automatique - lot de 15 (run #${{ github.run_number }})"
+          git push
+
+      - name: Attendre un peu avant le lot suivant (limiter le débit)
+        if: steps.enrichissement.outputs.code_sortie == '2'
+        run: sleep 30
+
+      - name: Déclencher le lot suivant s'il reste des leads à traiter
+        if: steps.enrichissement.outputs.code_sortie == '2'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Il reste des leads à traiter - déclenchement du prochain lot..."
+          gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}"
+
+      - name: Tout est terminé
+        if: steps.enrichissement.outputs.code_sortie == '0'
+        run: echo "✅ Tous les leads ont été traités, aucun lot supplémentaire nécessaire."
