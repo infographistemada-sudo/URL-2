@@ -48,7 +48,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add liste.csv leads_enrichis.csv
+          # On ajoute chaque fichier séparément et on ignore silencieusement celui
+          # qui n'existerait pas encore (ex: si le script a planté avant de le
+          # créer) - un fichier manquant ne doit pas empêcher de committer les
+          # autres, contrairement à "git add fichier1 fichier2" qui échoue en bloc
+          # dès qu'un seul des deux fichiers n'existe pas.
+          [ -f liste.csv ] && git add liste.csv || echo "liste.csv absent, ignoré"
+          [ -f leads_enrichis.csv ] && git add leads_enrichis.csv || echo "leads_enrichis.csv absent, ignoré"
           git diff --staged --quiet || git commit -m "Enrichissement automatique - lot de 15 (run #${{ github.run_number }})"
           git push
 
